@@ -127,3 +127,30 @@
     @apply font-sans;
     }
 }
+
+@layer components {
+  .field {
+    @apply h-9 w-full rounded-md border bg-transparent px-3 text-sm outline-none focus:border-foreground;
+  }
+  .nav-item {
+    @apply mb-1 block w-full rounded-md px-3 py-2 text-left text-sm capitalize text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+  .nav-item.active {
+    @apply bg-muted font-medium text-foreground;
+  }
+  .form-grid {
+    @apply grid items-end gap-3 md:grid-cols-2 xl:grid-cols-3;
+  }
+  .data-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .data-table th {
+    @apply border-b px-3 py-3 text-left font-medium text-muted-foreground;
+  }
+  .data-table td {
+    @apply border-b px-3 py-3 align-top;
+  }
+  .error {
+    @apply mb-4 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm text-destructive;
+  }
+}
