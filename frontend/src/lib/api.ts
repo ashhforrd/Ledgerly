@@ -1,7 +1,12 @@
 const API_BASE = '/api/v1'
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) { super(message) }
+  status: number
+
+  constructor(status: number, message: string) {
+    super(message)
+    this.status = status
+  }
 }
 
 export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
