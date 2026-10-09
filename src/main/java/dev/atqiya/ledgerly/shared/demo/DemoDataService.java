@@ -31,7 +31,19 @@ public class DemoDataService {
                 slug
         );
         if (!existing.isEmpty()) {
-            return new DemoSeedResult(existing.getFirst(), false);
+            UUID workspace = existing.getFirst();
+            LocalDate monthStart = LocalDate.now(ZoneId.of("Asia/Jakarta"))
+                    .withDayOfMonth(1);
+            seedStatementImport(
+                    workspace,
+                    userId,
+                    Timestamp.from(Instant.now()),
+                    monthStart,
+                    findTransaction(workspace, "Design software licenses"),
+                    findTransaction(workspace, "Acquisition campaign"),
+                    findTransaction(workspace, "Studio and coworking rent")
+            );
+            return new DemoSeedResult(workspace, false);
         }
 
         UUID workspace = UUID.randomUUID();
@@ -68,11 +80,14 @@ public class DemoDataService {
                 "Product strategy engagement", "October milestone", userId, now);
         transaction(workspace, retainers, "INCOME", "7250000", monthStart.plusDays(3),
                 "Monthly design retainer", null, userId, now);
-        transaction(workspace, software, "EXPENSE", "1200000", monthStart.plusDays(1),
+        UUID softwareTransaction = transaction(
+                workspace, software, "EXPENSE", "1200000", monthStart.plusDays(1),
                 "Design software licenses", null, userId, now);
-        transaction(workspace, marketing, "EXPENSE", "3500000", monthStart.plusDays(4),
+        UUID marketingTransaction = transaction(
+                workspace, marketing, "EXPENSE", "3500000", monthStart.plusDays(4),
                 "Acquisition campaign", null, userId, now);
-        transaction(workspace, operations, "EXPENSE", "2100000", monthStart.plusDays(7),
+        UUID operationsTransaction = transaction(
+                workspace, operations, "EXPENSE", "2100000", monthStart.plusDays(7),
                 "Studio and coworking rent", null, userId, now);
         transaction(workspace, null, "EXPENSE", "750000", today,
                 "AWS cloud hosting", "Ready for categorization rule demo", userId, now);
@@ -100,6 +115,16 @@ public class DemoDataService {
                     'cloud hosting', 10, true, ?, ?)
                 """, UUID.randomUUID(), workspace, software, userId, now);
 
+        seedStatementImport(
+                workspace,
+                userId,
+                now,
+                monthStart,
+                softwareTransaction,
+                marketingTransaction,
+                operationsTransaction
+        );
+
         return new DemoSeedResult(workspace, true);
     }
 
@@ -115,18 +140,96 @@ public class DemoDataService {
                 """, id, workspace, name, type, user, user, now, now);
     }
 
-    private void transaction(
+    private UUID transaction(
             UUID workspace, UUID category, String type, String amount,
             LocalDate date, String description, String notes, UUID user, Timestamp now
     ) {
+        UUID id = UUID.randomUUID();
         jdbc.update("""
                 insert into ledger_transactions (
                     id, workspace_id, category_id, type, status, amount,
                     currency, occurred_on, description, notes, created_by,
                     updated_by, created_at, updated_at, version
                 ) values (?, ?, ?, ?, 'POSTED', ?, 'IDR', ?, ?, ?, ?, ?, ?, ?, 0)
-                """, UUID.randomUUID(), workspace, category, type,
+                """, id, workspace, category, type,
                 new BigDecimal(amount), date, description, notes, user, user, now, now);
+        return id;
+    }
+
+    private UUID findTransaction(UUID workspace, String description) {
+        List<UUID> values = jdbc.query(
+                """
+                select id from ledger_transactions
+                where workspace_id = ? and description = ?
+                order by created_at asc limit 1
+                """,
+                (result, row) -> result.getObject("id", UUID.class),
+                workspace,
+                description
+        );
+        return values.isEmpty() ? null : values.getFirst();
+    }
+
+    private void seedStatementImport(
+            UUID workspace,
+            UUID user,
+            Timestamp now,
+            LocalDate monthStart,
+            UUID softwareTransaction,
+            UUID marketingTransaction,
+            UUID operationsTransaction
+    ) {
+        String fileName = "northstar-october-statement.csv";
+        Integer existing = jdbc.queryForObject(
+                "select count(*) from statement_imports where workspace_id = ? and file_name = ?",
+                Integer.class,
+                workspace,
+                fileName
+        );
+        if (existing != null && existing > 0) return;
+
+        UUID importId = UUID.randomUUID();
+        jdbc.update("""
+                insert into statement_imports (
+                    id, workspace_id, file_name, status, total_rows,
+                    valid_rows, duplicate_rows, created_by, created_at, confirmed_at
+                ) values (?, ?, ?, 'CONFIRMED', 4, 3, 1, ?, ?, ?)
+                """, importId, workspace, fileName, user, now, now);
+
+        statementRow(importId, workspace, 2, monthStart.plusDays(1),
+                "Design software licenses", "1200000", "EXPENSE",
+                "demo-software-license-october", false, softwareTransaction);
+        statementRow(importId, workspace, 3, monthStart.plusDays(4),
+                "Acquisition campaign", "3500000", "EXPENSE",
+                "demo-acquisition-campaign-october", false, marketingTransaction);
+        statementRow(importId, workspace, 4, monthStart.plusDays(7),
+                "Studio and coworking rent", "2100000", "EXPENSE",
+                "demo-studio-rent-october", false, operationsTransaction);
+        statementRow(importId, workspace, 5, monthStart.plusDays(1),
+                "Design software licenses", "1200000", "EXPENSE",
+                "demo-software-license-october", true, null);
+    }
+
+    private void statementRow(
+            UUID importId,
+            UUID workspace,
+            int rowNumber,
+            LocalDate occurredOn,
+            String description,
+            String amount,
+            String type,
+            String fingerprint,
+            boolean duplicate,
+            UUID transaction
+    ) {
+        jdbc.update("""
+                insert into statement_import_rows (
+                    id, import_id, workspace_id, row_number, occurred_on,
+                    description, amount, type, fingerprint, validation_error,
+                    duplicate, transaction_id
+                ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, null, ?, ?)
+                """, UUID.randomUUID(), importId, workspace, rowNumber, occurredOn,
+                description, new BigDecimal(amount), type, fingerprint, duplicate, transaction);
     }
 
     private void customer(

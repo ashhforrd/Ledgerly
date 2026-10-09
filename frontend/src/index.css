@@ -66,38 +66,38 @@
 :root,
 .dark {
   color-scheme: dark;
-  --background: oklch(0.13 0.012 260);
-  --foreground: oklch(0.96 0.008 255);
-  --card: oklch(0.17 0.014 260);
-  --card-foreground: oklch(0.96 0.008 255);
-  --popover: oklch(0.19 0.016 260);
-  --popover-foreground: oklch(0.96 0.008 255);
-  --primary: oklch(0.62 0.2 257);
-  --primary-foreground: oklch(0.98 0.005 255);
-  --secondary: oklch(0.215 0.014 260);
-  --secondary-foreground: oklch(0.94 0.006 255);
-  --muted: oklch(0.21 0.012 260);
-  --muted-foreground: oklch(0.68 0.018 255);
-  --accent: oklch(0.25 0.035 258);
-  --accent-foreground: oklch(0.96 0.008 255);
+  --background: oklch(0.125 0.007 155);
+  --foreground: oklch(0.96 0.006 155);
+  --card: oklch(0.165 0.01 155);
+  --card-foreground: oklch(0.96 0.006 155);
+  --popover: oklch(0.185 0.012 155);
+  --popover-foreground: oklch(0.96 0.006 155);
+  --primary: oklch(0.69 0.17 155);
+  --primary-foreground: oklch(0.13 0.025 155);
+  --secondary: oklch(0.21 0.012 155);
+  --secondary-foreground: oklch(0.94 0.006 155);
+  --muted: oklch(0.205 0.01 155);
+  --muted-foreground: oklch(0.68 0.014 155);
+  --accent: oklch(0.245 0.035 155);
+  --accent-foreground: oklch(0.96 0.006 155);
   --destructive: oklch(0.68 0.19 24);
-  --border: oklch(0.28 0.016 260);
-  --input: oklch(0.27 0.017 260);
-  --ring: oklch(0.62 0.2 257);
-  --chart-1: oklch(0.66 0.19 257);
-  --chart-2: oklch(0.72 0.14 190);
+  --border: oklch(0.275 0.014 155);
+  --input: oklch(0.265 0.015 155);
+  --ring: oklch(0.69 0.17 155);
+  --chart-1: oklch(0.69 0.17 155);
+  --chart-2: oklch(0.73 0.14 135);
   --chart-3: oklch(0.76 0.15 82);
   --chart-4: oklch(0.68 0.17 304);
   --chart-5: oklch(0.67 0.18 25);
   --radius: 0.75rem;
-  --sidebar: oklch(0.145 0.013 260);
-  --sidebar-foreground: oklch(0.94 0.008 255);
-  --sidebar-primary: oklch(0.62 0.2 257);
-  --sidebar-primary-foreground: oklch(0.98 0.005 255);
-  --sidebar-accent: oklch(0.22 0.026 258);
-  --sidebar-accent-foreground: oklch(0.96 0.008 255);
-  --sidebar-border: oklch(0.25 0.015 260);
-  --sidebar-ring: oklch(0.62 0.2 257);
+  --sidebar: oklch(0.14 0.009 155);
+  --sidebar-foreground: oklch(0.94 0.006 155);
+  --sidebar-primary: oklch(0.69 0.17 155);
+  --sidebar-primary-foreground: oklch(0.13 0.025 155);
+  --sidebar-accent: oklch(0.215 0.024 155);
+  --sidebar-accent-foreground: oklch(0.96 0.006 155);
+  --sidebar-border: oklch(0.245 0.013 155);
+  --sidebar-ring: oklch(0.69 0.17 155);
 }
 
 @layer base {
@@ -125,7 +125,7 @@
     @apply flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium capitalize text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground;
   }
   .nav-item.active {
-    @apply bg-blue-500/10 text-blue-300 ring-1 ring-blue-400/15;
+    @apply bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/15;
   }
   .form-grid {
     @apply grid items-end gap-4 md:grid-cols-2 xl:grid-cols-3;
@@ -147,12 +147,12 @@
   }
   .auth-grid {
     background-image:
-      linear-gradient(oklch(0.62 0.2 257 / 0.045) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.62 0.2 257 / 0.045) 1px, transparent 1px);
+      linear-gradient(oklch(0.69 0.17 155 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.69 0.17 155 / 0.04) 1px, transparent 1px);
     background-size: 42px 42px;
   }
   .rdp-ledgerly {
-    --rdp-accent-color: oklch(0.62 0.2 257);
+    --rdp-accent-color: oklch(0.69 0.17 155);
     margin: 0;
   }
   .rdp-ledgerly .rdp-month_caption {
@@ -175,12 +175,12 @@
     @apply grid size-9 place-items-center rounded-md text-sm hover:bg-muted;
   }
   .rdp-ledgerly .rdp-selected .rdp-day_button {
-    @apply bg-blue-500 font-semibold text-white hover:bg-blue-500;
+    @apply bg-emerald-500 font-semibold text-emerald-950 hover:bg-emerald-500;
   }
   .rdp-ledgerly .rdp-outside {
     @apply text-muted-foreground/40;
   }
   .rdp-ledgerly .rdp-today:not(.rdp-selected) .rdp-day_button {
-    @apply bg-blue-500/10 text-blue-300;
+    @apply bg-emerald-500/10 text-emerald-300;
   }
 }

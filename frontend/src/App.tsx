@@ -66,6 +66,8 @@ type ImportPreview = {
   totalRows: number;
   validRows: number;
   duplicateRows: number;
+  createdAt: string;
+  confirmedAt: string | null;
 };
 
 const today = new Date().toISOString().slice(0, 10);
@@ -98,6 +100,13 @@ function message(error: unknown) {
   return error instanceof Error
     ? error.message
     : "The request could not be completed.";
+}
+
+function dateTime(value: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
 }
 
 function App() {
@@ -294,14 +303,14 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
   };
   return (
     <main className="auth-grid relative grid min-h-screen overflow-hidden lg:grid-cols-[1.1fr_.9fr]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(37,99,235,.18),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(59,130,246,.08),transparent_30%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,.16),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(34,197,94,.07),transparent_30%)]" />
       <section className="relative hidden flex-col justify-between border-r p-12 lg:flex">
         <div className="flex items-center gap-3">
           <BrandMark />
           <span className="text-xl font-bold">Ledgerly</span>
         </div>
         <div className="max-w-xl">
-          <Badge className="mb-5 bg-blue-500/10 text-blue-300 hover:bg-blue-500/10">
+          <Badge className="mb-5 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/10">
             Financial operations, clearly organized
           </Badge>
           <h1 className="text-5xl font-bold leading-[1.08] tracking-[-.035em]">
@@ -384,7 +393,7 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
               )}
               <Button
                 type="submit"
-                className="h-10 w-full bg-blue-500 hover:bg-blue-400"
+                className="h-10 w-full bg-emerald-500 hover:bg-emerald-400"
                 disabled={loading}
               >
                 {loading && <Loader2 className="animate-spin" />}
@@ -464,7 +473,7 @@ function WorkspaceSetup({ onCreated }: { onCreated: () => Promise<void> }) {
             </div>
             <Button
               type="submit"
-              className="h-10 w-full bg-blue-500 hover:bg-blue-400"
+              className="h-10 w-full bg-emerald-500 hover:bg-emerald-400"
               disabled={loading}
             >
               {loading && <Loader2 className="animate-spin" />}Create workspace
@@ -566,7 +575,7 @@ function Metric({
   tone: "blue" | "green" | "amber";
 }) {
   const tones = {
-    blue: "bg-blue-500/10 text-blue-300",
+    blue: "bg-emerald-500/10 text-emerald-300",
     green: "bg-emerald-500/10 text-emerald-300",
     amber: "bg-amber-500/10 text-amber-300",
   };
@@ -596,7 +605,7 @@ function StatusBadge({ status }: { status: string }) {
       : status === "VOID" || status === "VOIDED"
         ? "border-red-400/20 bg-red-400/10 text-red-300"
         : status === "SENT"
-          ? "border-blue-400/20 bg-blue-400/10 text-blue-300"
+          ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
           : "";
   return (
     <Badge variant="outline" className={style}>
@@ -824,7 +833,7 @@ function Transactions({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-blue-500 hover:bg-blue-400"
+              className="h-10 bg-emerald-500 hover:bg-emerald-400"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1046,7 +1055,7 @@ function Customers({ workspace }: { workspace: Workspace }) {
             <Field name="billingAddress" label="Billing address" />
             <Button
               type="submit"
-              className="h-10 bg-blue-500 hover:bg-blue-400"
+              className="h-10 bg-emerald-500 hover:bg-emerald-400"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1286,7 +1295,7 @@ function Invoices({ workspace }: { workspace: Workspace }) {
               <Field name="notes" label="Notes (optional)" />
               <Button
                 type="submit"
-                className="h-10 bg-blue-500 hover:bg-blue-400"
+                className="h-10 bg-emerald-500 hover:bg-emerald-400"
                 disabled={saving}
               >
                 {saving ? <Loader2 className="animate-spin" /> : <Plus />}Create
@@ -1505,7 +1514,7 @@ function PaymentDialog({
           <Button
             type="submit"
             form="record-payment"
-            className="bg-blue-500 hover:bg-blue-400"
+            className="bg-emerald-500 hover:bg-emerald-400"
             disabled={loading}
           >
             {loading && <Loader2 className="animate-spin" />}Record payment
@@ -1594,7 +1603,7 @@ function Categories({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-blue-500 hover:bg-blue-400"
+              className="h-10 bg-emerald-500 hover:bg-emerald-400"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1664,7 +1673,24 @@ function Categories({ workspace }: { workspace: Workspace }) {
 
 function Imports({ workspace }: { workspace: Workspace }) {
   const [preview, setPreview] = useState<ImportPreview | null>(null),
-    [loading, setLoading] = useState(false);
+    [history, setHistory] = useState<ImportPreview[]>([]),
+    [loading, setLoading] = useState(false),
+    [historyLoading, setHistoryLoading] = useState(true);
+  const loadHistory = useCallback(async () => {
+    setHistoryLoading(true);
+    try {
+      setHistory(
+        await api<ImportPreview[]>(`/workspaces/${workspace.id}/imports`),
+      );
+    } catch (error) {
+      toast.error(message(error));
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, [workspace.id]);
+  useEffect(() => {
+    void loadHistory();
+  }, [loadHistory]);
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -1675,6 +1701,7 @@ function Imports({ workspace }: { workspace: Workspace }) {
           body: new FormData(event.currentTarget),
         }),
       );
+      await loadHistory();
       toast.success("Statement preview ready");
     } catch (error) {
       toast.error(message(error));
@@ -1691,6 +1718,7 @@ function Imports({ workspace }: { workspace: Workspace }) {
           method: "POST",
         }),
       );
+      await loadHistory();
       toast.success("Statement imported into the ledger");
     } catch (error) {
       toast.error(message(error));
@@ -1724,7 +1752,7 @@ function Imports({ workspace }: { workspace: Workspace }) {
             </div>
             <Button
               type="submit"
-              className="h-10 bg-blue-500 hover:bg-blue-400"
+              className="h-10 bg-emerald-500 hover:bg-emerald-400"
               disabled={loading}
             >
               {loading ? <Loader2 className="animate-spin" /> : <FileUp />}
@@ -1736,7 +1764,7 @@ function Imports({ workspace }: { workspace: Workspace }) {
               <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
                   <div className="flex items-center gap-2">
-                    <FileText className="size-4 text-blue-300" />
+                    <FileText className="size-4 text-emerald-300" />
                     <p className="font-medium">{preview.fileName}</p>
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">
@@ -1759,6 +1787,58 @@ function Imports({ workspace }: { workspace: Workspace }) {
                 </div>
               </div>
             </div>
+          )}
+        </CardContent>
+      </Card>
+      <Card className="mt-6 overflow-hidden">
+        <CardHeader>
+          <CardTitle className="text-base">Import history</CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {historyLoading ? (
+            <div className="p-4">
+              <Skeleton className="h-24" />
+            </div>
+          ) : history.length === 0 ? (
+            <div className="px-4 pb-4">
+              <Empty
+                icon={FileUp}
+                title="No statements imported"
+                copy="Upload a CSV statement to validate it before adding transactions."
+              />
+            </div>
+          ) : (
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Statement</th>
+                  <th>Status</th>
+                  <th>Rows</th>
+                  <th>Imported</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((item) => (
+                  <tr key={item.id}>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <FileText className="size-4 text-emerald-300" />
+                        <span className="font-medium">{item.fileName}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <StatusBadge status={item.status} />
+                    </td>
+                    <td className="text-muted-foreground">
+                      {item.validRows} valid · {item.duplicateRows} duplicate
+                    </td>
+                    <td className="text-muted-foreground">
+                      {dateTime(item.confirmedAt ?? item.createdAt)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </CardContent>
       </Card>
@@ -1893,7 +1973,7 @@ function Rules({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-blue-500 hover:bg-blue-400"
+              className="h-10 bg-emerald-500 hover:bg-emerald-400"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Create

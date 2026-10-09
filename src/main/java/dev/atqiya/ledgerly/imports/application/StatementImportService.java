@@ -5,6 +5,12 @@ import java.io.*; import java.math.*; import java.nio.charset.StandardCharsets; 
  private static final Set<WorkspaceRole> EDITORS=Set.of(WorkspaceRole.OWNER,WorkspaceRole.ADMIN,WorkspaceRole.MEMBER);
  private final StatementImportRepository imports; private final StatementImportRowRepository rows; private final LedgerTransactionRepository transactions; private final WorkspaceAccessService access;
  public StatementImportService(StatementImportRepository i,StatementImportRowRepository r,LedgerTransactionRepository t,WorkspaceAccessService a){imports=i;rows=r;transactions=t;access=a;}
+ @Transactional(readOnly=true) public List<ImportView> list(UUID userId,UUID workspaceId){
+  access.requireMembership(userId,workspaceId);
+  return imports.findAllByWorkspace_IdOrderByCreatedAtDesc(workspaceId).stream()
+   .map(value->ImportView.from(value,rows.findAllByStatementImport_IdOrderByRowNumber(value.getId())))
+   .toList();
+ }
  @Transactional public ImportView preview(UUID userId,UUID workspaceId,MultipartFile file)throws IOException{
   var m=access.requireRole(userId,workspaceId,EDITORS); var batch=new StatementImport(UUID.randomUUID(),m.getWorkspace(),Optional.ofNullable(file.getOriginalFilename()).orElse("statement.csv"),m.getUser(),Instant.now());imports.save(batch);
   var parsed=new ArrayList<StatementImportRow>(); try(var reader=new BufferedReader(new InputStreamReader(file.getInputStream(),StandardCharsets.UTF_8))){String line;int n=0;while((line=reader.readLine())!=null){n++;if(n==1&&line.toLowerCase().contains("date"))continue;String[] p=line.split(",",3);LocalDate d=null;BigDecimal a=null;String desc=p.length>1?p[1].strip():null,error=null;TransactionType type=null;try{d=LocalDate.parse(p[0].strip());a=new BigDecimal(p[2].strip());type=a.signum()>=0?TransactionType.INCOME:TransactionType.EXPENSE;a=a.abs();if(a.signum()==0||desc.isBlank())throw new IllegalArgumentException();}catch(Exception e){error="Expected date,description,signed amount.";}String fp=error==null?hash(d+"|"+desc.toLowerCase()+"|"+a+"|"+type):null;boolean dup=fp!=null&&rows.existsByWorkspace_IdAndFingerprint(workspaceId,fp);parsed.add(new StatementImportRow(UUID.randomUUID(),batch,m.getWorkspace(),n,d,desc,a,type,fp,error,dup));}}
