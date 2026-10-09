@@ -83,12 +83,12 @@ public class TransactionService {
     }
 
     private LedgerTransaction requireTransaction(UUID workspaceId, UUID id) {
-        return transactionRepository.findByIdAndWorkspaceId(id, workspaceId)
+        return transactionRepository.findByIdAndWorkspace_Id(id, workspaceId)
                 .orElseThrow(TransactionNotFoundException::new);
     }
     private Category resolveCategory(UUID workspaceId, UUID id, TransactionType type) {
         if (id == null) return null;
-        Category category = categoryRepository.findByIdAndWorkspaceId(id, workspaceId)
+        Category category = categoryRepository.findByIdAndWorkspace_Id(id, workspaceId)
                 .orElseThrow(CategoryNotFoundException::new);
         if (!category.isActive()) throw new InvalidTransactionException("Archived categories cannot be assigned.");
         if (category.getType() != type) throw new InvalidTransactionException("Category type must match transaction type.");

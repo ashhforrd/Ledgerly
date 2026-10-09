@@ -50,7 +50,7 @@ public class CategoryService {
 
         String normalizedName = normalizeName(name);
 
-        if (categoryRepository.existsByWorkspaceIdAndTypeAndNameIgnoreCase(
+        if (categoryRepository.existsByWorkspace_IdAndTypeAndNameIgnoreCase(
                 workspaceId,
                 type,
                 normalizedName
@@ -92,21 +92,21 @@ public class CategoryService {
         if (type != null) {
             categories = includeArchived
                     ? categoryRepository
-                            .findAllByWorkspaceIdOrderByTypeAscNameAsc(workspaceId)
+                            .findAllByWorkspace_IdOrderByTypeAscNameAsc(workspaceId)
                             .stream()
                             .filter(category -> category.getType() == type)
                             .toList()
                     : categoryRepository
-                            .findAllByWorkspaceIdAndTypeAndActiveTrueOrderByNameAsc(
+                            .findAllByWorkspace_IdAndTypeAndActiveTrueOrderByNameAsc(
                                     workspaceId,
                                     type
                             );
         } else {
             categories = includeArchived
                     ? categoryRepository
-                            .findAllByWorkspaceIdOrderByTypeAscNameAsc(workspaceId)
+                            .findAllByWorkspace_IdOrderByTypeAscNameAsc(workspaceId)
                     : categoryRepository
-                            .findAllByWorkspaceIdAndActiveTrueOrderByTypeAscNameAsc(
+                            .findAllByWorkspace_IdAndActiveTrueOrderByTypeAscNameAsc(
                                     workspaceId
                             );
         }
@@ -150,7 +150,7 @@ public class CategoryService {
 
         if (nameChanged
                 && categoryRepository
-                        .existsByWorkspaceIdAndTypeAndNameIgnoreCase(
+                        .existsByWorkspace_IdAndTypeAndNameIgnoreCase(
                                 workspaceId,
                                 category.getType(),
                                 normalizedName
@@ -202,7 +202,7 @@ public class CategoryService {
             UUID categoryId
     ) {
         return categoryRepository
-                .findByIdAndWorkspaceId(categoryId, workspaceId)
+                .findByIdAndWorkspace_Id(categoryId, workspaceId)
                 .orElseThrow(CategoryNotFoundException::new);
     }
 

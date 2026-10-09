@@ -9,20 +9,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
-    List<Category> findAllByWorkspaceIdOrderByTypeAscNameAsc(UUID workspaceId);
+    List<Category> findAllByWorkspace_IdOrderByTypeAscNameAsc(UUID workspaceId);
 
-    List<Category> findAllByWorkspaceIdAndActiveTrueOrderByTypeAscNameAsc(
+    List<Category> findAllByWorkspace_IdAndActiveTrueOrderByTypeAscNameAsc(
             UUID workspaceId
     );
 
-    List<Category> findAllByWorkspaceIdAndTypeAndActiveTrueOrderByNameAsc(
+    List<Category> findAllByWorkspace_IdAndTypeAndActiveTrueOrderByNameAsc(
             UUID workspaceId,
             TransactionType type
     );
 
-    Optional<Category> findByIdAndWorkspaceId(UUID id, UUID workspaceId);
+    Optional<Category> findByIdAndWorkspace_Id(UUID id, UUID workspaceId);
 
-    boolean existsByWorkspaceIdAndTypeAndNameIgnoreCase(
+    boolean existsByWorkspace_IdAndTypeAndNameIgnoreCase(
             UUID workspaceId,
             TransactionType type,
             String name

@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface LedgerTransactionRepository extends JpaRepository<LedgerTransaction, UUID>,
         JpaSpecificationExecutor<LedgerTransaction> {
     @EntityGraph(attributePaths = "category")
-    Optional<LedgerTransaction> findByIdAndWorkspaceId(UUID id, UUID workspaceId);
+    Optional<LedgerTransaction> findByIdAndWorkspace_Id(UUID id, UUID workspaceId);
 }
