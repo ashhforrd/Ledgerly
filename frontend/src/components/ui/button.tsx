@@ -43,7 +43,7 @@ function Button({
   className,
   variant = "default",
   size = "default",
-  type = "submit",
+  type = "button",
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
   return (
