@@ -38,6 +38,7 @@ services:
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-ledgerly}
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      LEDGERLY_DEMO_SEED_ENABLED: ${LEDGERLY_DEMO_SEED_ENABLED:-true}
     ports:
       - "8080:8080"
     depends_on:

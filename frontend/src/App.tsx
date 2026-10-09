@@ -114,12 +114,27 @@ function App() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
+      let seededWorkspaceId = "";
+      try {
+        const seeded = await api<{ workspaceId: string; created: boolean }>(
+          "/demo/seed",
+          { method: "POST" },
+        );
+        if (seeded.created) seededWorkspaceId = seeded.workspaceId;
+      } catch (error) {
+        if (!(error instanceof ApiError && error.status === 404)) throw error;
+      }
+
       const values = await api<Workspace[]>("/workspaces");
       setWorkspaces(values);
       setWorkspaceId((current) => {
-        const next = values.some((workspace) => workspace.id === current)
-          ? current
-          : (values[0]?.id ?? "");
+        const next = values.some(
+          (workspace) => workspace.id === seededWorkspaceId,
+        )
+          ? seededWorkspaceId
+          : values.some((workspace) => workspace.id === current)
+            ? current
+            : (values[0]?.id ?? "");
         if (next) localStorage.setItem("ledgerly.workspaceId", next);
         return next;
       });
@@ -173,6 +188,25 @@ function App() {
           </div>
         </div>
         <Separator />
+        <div className="space-y-2 px-4 pt-4">
+          <p className="px-1 text-[11px] font-semibold uppercase tracking-[.16em] text-muted-foreground">
+            Workspace
+          </p>
+          <FormSelect
+            value={workspaceId}
+            onValueChange={(value) => {
+              setWorkspaceId(value);
+              localStorage.setItem("ledgerly.workspaceId", value);
+            }}
+            options={workspaces.map((item) => ({
+              value: item.id,
+              label: item.name,
+            }))}
+          />
+          <p className="px-1 text-xs text-muted-foreground">
+            {workspace.defaultCurrency} · {workspace.role}
+          </p>
+        </div>
         <nav className="grid grid-cols-2 gap-1 p-3 sm:grid-cols-4 lg:block lg:p-4">
           {navItems.map(({ id, label, icon: Icon }) => (
             <button
@@ -186,37 +220,28 @@ function App() {
             </button>
           ))}
         </nav>
-        <div className="hidden px-4 lg:absolute lg:inset-x-0 lg:bottom-4 lg:block">
-          <div className="rounded-xl border bg-card/60 p-3">
-            <p className="truncate text-sm font-medium">{workspace.name}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {workspace.defaultCurrency} · {workspace.role}
-            </p>
-          </div>
-        </div>
       </aside>
 
       <div className="min-w-0">
         <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background/85 px-5 backdrop-blur-xl md:px-8">
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-medium uppercase tracking-[.16em] text-muted-foreground">
-              Workspace
-            </p>
-            <FormSelect
-              value={workspaceId}
-              onValueChange={(value) => {
-                setWorkspaceId(value);
-                localStorage.setItem("ledgerly.workspaceId", value);
-              }}
-              options={workspaces.map((item) => ({
-                value: item.id,
-                label: item.name,
-              }))}
-            />
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            {(() => {
+              const activeItem = navItems.find((item) => item.id === section);
+              const Icon = activeItem?.icon;
+              return (
+                <>
+                  {Icon && (
+                    <div className="grid size-9 place-items-center rounded-lg border bg-card">
+                      <Icon className="size-4 text-muted-foreground" />
+                    </div>
+                  )}
+                  <h1 className="truncate text-lg font-semibold tracking-tight">
+                    {activeItem?.label}
+                  </h1>
+                </>
+              );
+            })()}
           </div>
-          <Badge variant="outline" className="hidden sm:inline-flex">
-            {workspace.role}
-          </Badge>
           <Button
             type="button"
             variant="ghost"
@@ -546,11 +571,11 @@ function Metric({
     amber: "bg-amber-500/10 text-amber-300",
   };
   return (
-    <Card>
-      <CardContent className="flex items-start justify-between p-6">
+    <Card className="py-0">
+      <CardContent className="flex items-center justify-between px-5 py-4 md:px-6">
         <div>
           <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="mt-3 text-2xl font-bold tabular-nums tracking-tight">
+          <p className="mt-1.5 text-2xl font-bold tabular-nums tracking-tight">
             {value}
           </p>
         </div>
