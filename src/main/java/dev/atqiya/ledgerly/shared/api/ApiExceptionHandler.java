@@ -3,6 +3,8 @@ package dev.atqiya.ledgerly.shared.api;
 import dev.atqiya.ledgerly.identity.application.EmailAlreadyRegisteredException;
 import dev.atqiya.ledgerly.identity.application.InvalidCredentialsException;
 import dev.atqiya.ledgerly.identity.application.InvalidSessionException;
+import dev.atqiya.ledgerly.workspace.application.InvalidWorkspaceException;
+import dev.atqiya.ledgerly.workspace.application.WorkspaceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.LinkedHashMap;
@@ -77,6 +79,34 @@ public class ApiExceptionHandler {
         );
         problem.setProperty("errors", errors);
         return problem;
+    }
+
+    @ExceptionHandler(WorkspaceNotFoundException.class)
+    ProblemDetail handleWorkspaceNotFound(
+            WorkspaceNotFoundException exception,
+            HttpServletRequest request
+    ) {
+        return createProblem(
+                HttpStatus.NOT_FOUND,
+                "Workspace not found",
+                exception.getMessage(),
+                "workspace-not-found",
+                request
+        );
+    }
+
+    @ExceptionHandler(InvalidWorkspaceException.class)
+    ProblemDetail handleInvalidWorkspace(
+            InvalidWorkspaceException exception,
+            HttpServletRequest request
+    ) {
+        return createProblem(
+                HttpStatus.BAD_REQUEST,
+                "Invalid workspace",
+                exception.getMessage(),
+                "invalid-workspace",
+                request
+        );
     }
 
     private ProblemDetail createProblem(

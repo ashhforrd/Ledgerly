@@ -51,7 +51,19 @@ public class WorkspaceMembership {
 		return workspace;
 	}
 
+	public UUID getId() {
+		return id;
+	}
+
+	public AppUser getUser() {
+		return user;
+	}
+
 	public WorkspaceRole getRole() {
 		return role;
+	}
+
+	public Instant getJoinedAt() {
+		return joinedAt;
 	}
 }
