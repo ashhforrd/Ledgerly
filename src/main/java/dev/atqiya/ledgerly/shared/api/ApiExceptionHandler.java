@@ -3,6 +3,9 @@ package dev.atqiya.ledgerly.shared.api;
 import dev.atqiya.ledgerly.identity.application.EmailAlreadyRegisteredException;
 import dev.atqiya.ledgerly.identity.application.InvalidCredentialsException;
 import dev.atqiya.ledgerly.identity.application.InvalidSessionException;
+import dev.atqiya.ledgerly.ledger.application.CategoryNotFoundException;
+import dev.atqiya.ledgerly.ledger.application.DuplicateCategoryException;
+import dev.atqiya.ledgerly.ledger.application.InvalidCategoryException;
 import dev.atqiya.ledgerly.workspace.application.InvalidWorkspaceException;
 import dev.atqiya.ledgerly.workspace.application.WorkspaceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +20,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    ProblemDetail handleCategoryNotFound(CategoryNotFoundException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.NOT_FOUND, "Category not found", exception.getMessage(),
+                "category-not-found", request);
+    }
+
+    @ExceptionHandler(DuplicateCategoryException.class)
+    ProblemDetail handleDuplicateCategory(DuplicateCategoryException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.CONFLICT, "Category already exists", exception.getMessage(),
+                "duplicate-category", request);
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    ProblemDetail handleInvalidCategory(InvalidCategoryException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.BAD_REQUEST, "Invalid category", exception.getMessage(),
+                "invalid-category", request);
+    }
 
     @ExceptionHandler(EmailAlreadyRegisteredException.class)
     ProblemDetail handleEmailAlreadyRegistered(
