@@ -3,6 +3,7 @@ package dev.atqiya.ledgerly.shared.api;
 import dev.atqiya.ledgerly.identity.application.EmailAlreadyRegisteredException;
 import dev.atqiya.ledgerly.identity.application.InvalidCredentialsException;
 import dev.atqiya.ledgerly.identity.application.InvalidSessionException;
+import dev.atqiya.ledgerly.invoicing.application.InvoicingException;
 import dev.atqiya.ledgerly.ledger.application.CategoryNotFoundException;
 import dev.atqiya.ledgerly.ledger.application.DuplicateCategoryException;
 import dev.atqiya.ledgerly.ledger.application.InvalidCategoryException;
@@ -22,6 +23,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(InvoicingException.class)
+    ProblemDetail handleInvoicing(InvoicingException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.BAD_REQUEST, "Invalid invoicing operation", exception.getMessage(),
+                "invalid-invoicing-operation", request);
+    }
 
     @ExceptionHandler(TransactionNotFoundException.class)
     ProblemDetail handleTransactionNotFound(TransactionNotFoundException exception, HttpServletRequest request) {
