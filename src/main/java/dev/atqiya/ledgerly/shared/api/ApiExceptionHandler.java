@@ -24,6 +24,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    ProblemDetail handleIllegalArgument(IllegalArgumentException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.BAD_REQUEST, "Invalid request", exception.getMessage(),
+                "invalid-request", request);
+    }
+
     @ExceptionHandler(InvoicingException.class)
     ProblemDetail handleInvoicing(InvoicingException exception, HttpServletRequest request) {
         return createProblem(HttpStatus.BAD_REQUEST, "Invalid invoicing operation", exception.getMessage(),

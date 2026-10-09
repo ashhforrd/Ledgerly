@@ -56,6 +56,16 @@ public class LedgerTransaction {
         this.voidedBy = actor; this.voidedAt = now; this.updatedBy = actor; this.updatedAt = now;
     }
 
+    public void assignCategory(Category category, AppUser actor, Instant now) {
+        requirePosted();
+        if (category.getType() != type) {
+            throw new IllegalArgumentException("Category type must match transaction type.");
+        }
+        this.category = category;
+        this.updatedBy = actor;
+        this.updatedAt = now;
+    }
+
     private void requirePosted() {
         if (status != TransactionStatus.POSTED) throw new IllegalStateException("Voided transactions cannot be changed.");
     }

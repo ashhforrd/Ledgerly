@@ -1,0 +1,3 @@
+package dev.atqiya.ledgerly.reporting.infrastructure;
+import dev.atqiya.ledgerly.reporting.domain.CategorizationRule; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository;
+public interface CategorizationRuleRepository extends JpaRepository<CategorizationRule,UUID>{List<CategorizationRule> findAllByWorkspace_IdOrderByPriorityAsc(UUID workspaceId);List<CategorizationRule> findAllByWorkspace_IdAndActiveTrueOrderByPriorityAsc(UUID workspaceId);Optional<CategorizationRule> findByIdAndWorkspace_Id(UUID id,UUID workspaceId);boolean existsByWorkspace_IdAndPriority(UUID workspaceId,int priority);}

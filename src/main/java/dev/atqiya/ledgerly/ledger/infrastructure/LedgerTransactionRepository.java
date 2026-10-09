@@ -11,4 +11,17 @@ public interface LedgerTransactionRepository extends JpaRepository<LedgerTransac
         JpaSpecificationExecutor<LedgerTransaction> {
     @EntityGraph(attributePaths = "category")
     Optional<LedgerTransaction> findByIdAndWorkspace_Id(UUID id, UUID workspaceId);
+
+    @EntityGraph(attributePaths = "category")
+    java.util.List<LedgerTransaction> findAllByWorkspace_IdAndStatusAndOccurredOnBetweenOrderByOccurredOnAsc(
+            UUID workspaceId,
+            dev.atqiya.ledgerly.ledger.domain.TransactionStatus status,
+            java.time.LocalDate from,
+            java.time.LocalDate to
+    );
+
+    java.util.List<LedgerTransaction> findAllByWorkspace_IdAndStatusAndCategoryIsNull(
+            UUID workspaceId,
+            dev.atqiya.ledgerly.ledger.domain.TransactionStatus status
+    );
 }
