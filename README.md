@@ -123,6 +123,29 @@ should intentionally be deleted.
 6. Complete the operations-focused web interface.
 7. Reliability tests, observability, documentation, and demo packaging.
 
+Milestones 1–7 are implemented. See [API reference](docs/API.md) and
+[demo checklist](docs/DEMO.md) for the supported workflows.
+
+## Verification
+
+Run backend tests and the frontend production build:
+
+```bash
+./gradlew test
+cd frontend && npm run build
+```
+
+Run the complete production-shaped local stack:
+
+```bash
+docker compose up --build
+curl http://localhost:8080/actuator/health
+```
+
+Responses include an `X-Request-ID` header for log correlation. Health,
+liveness, readiness, application info, and metrics are exposed through Spring
+Boot Actuator.
+
 ## Interface principles
 
 - Never display fabricated financial data.

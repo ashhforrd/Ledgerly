@@ -29,6 +29,32 @@ management:
     health:
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Ledgerly
+    description: Financial operations for freelancers and small businesses
+    version: ${LEDGERLY_VERSION:local}
+
+logging:
+  pattern:
+    level: "%5p [requestId:%X{requestId:-system}]"
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Ledgerly
+    description: Financial operations for freelancers and small businesses
+    version: ${LEDGERLY_VERSION:local}
+
+logging:
+  pattern:
+    level: "%5p [requestId:%X{requestId:-system}]"
 
 server:
   shutdown: graceful
