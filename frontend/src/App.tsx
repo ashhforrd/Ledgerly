@@ -188,7 +188,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="border-b bg-sidebar lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
+      <aside className="flex flex-col border-b bg-sidebar lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
         <div className="flex h-20 items-center gap-3 px-5">
           <BrandMark />
           <div>
@@ -216,7 +216,7 @@ function App() {
             {workspace.defaultCurrency} · {workspace.role}
           </p>
         </div>
-        <nav className="grid grid-cols-2 gap-1 p-3 sm:grid-cols-4 lg:block lg:p-4">
+        <nav className="grid flex-1 grid-cols-2 content-start gap-1 p-3 sm:grid-cols-4 lg:block lg:p-4">
           {navItems.map(({ id, label, icon: Icon }) => (
             <button
               type="button"
@@ -229,38 +229,20 @@ function App() {
             </button>
           ))}
         </nav>
-      </aside>
-
-      <div className="min-w-0">
-        <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background/85 px-5 backdrop-blur-xl md:px-8">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
-            {(() => {
-              const activeItem = navItems.find((item) => item.id === section);
-              const Icon = activeItem?.icon;
-              return (
-                <>
-                  {Icon && (
-                    <div className="grid size-9 place-items-center rounded-lg border bg-card">
-                      <Icon className="size-4 text-muted-foreground" />
-                    </div>
-                  )}
-                  <h1 className="truncate text-lg font-semibold tracking-tight">
-                    {activeItem?.label}
-                  </h1>
-                </>
-              );
-            })()}
-          </div>
+        <div className="mt-auto border-t p-3 lg:p-4">
           <Button
             type="button"
             variant="ghost"
-            size="icon"
+            className="h-10 w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
             onClick={logout}
-            aria-label="Sign out"
           >
-            <LogOut />
+            <LogOut className="size-4" />
+            Sign out
           </Button>
-        </header>
+        </div>
+      </aside>
+
+      <div className="min-w-0">
         <main className="mx-auto w-full max-w-[1440px] p-5 md:p-8 lg:p-10">
           {section === "overview" && <Overview workspace={workspace} />}
           {section === "transactions" && <Transactions workspace={workspace} />}
