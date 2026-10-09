@@ -6,6 +6,8 @@ import dev.atqiya.ledgerly.identity.application.InvalidSessionException;
 import dev.atqiya.ledgerly.ledger.application.CategoryNotFoundException;
 import dev.atqiya.ledgerly.ledger.application.DuplicateCategoryException;
 import dev.atqiya.ledgerly.ledger.application.InvalidCategoryException;
+import dev.atqiya.ledgerly.ledger.application.InvalidTransactionException;
+import dev.atqiya.ledgerly.ledger.application.TransactionNotFoundException;
 import dev.atqiya.ledgerly.workspace.application.InvalidWorkspaceException;
 import dev.atqiya.ledgerly.workspace.application.WorkspaceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +22,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    ProblemDetail handleTransactionNotFound(TransactionNotFoundException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.NOT_FOUND, "Transaction not found", exception.getMessage(),
+                "transaction-not-found", request);
+    }
+
+    @ExceptionHandler(InvalidTransactionException.class)
+    ProblemDetail handleInvalidTransaction(InvalidTransactionException exception, HttpServletRequest request) {
+        return createProblem(HttpStatus.BAD_REQUEST, "Invalid transaction", exception.getMessage(),
+                "invalid-transaction", request);
+    }
 
     @ExceptionHandler(CategoryNotFoundException.class)
     ProblemDetail handleCategoryNotFound(CategoryNotFoundException exception, HttpServletRequest request) {

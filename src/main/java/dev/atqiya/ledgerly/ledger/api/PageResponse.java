@@ -1,0 +1,9 @@
+package dev.atqiya.ledgerly.ledger.api;
+import java.util.List;
+import org.springframework.data.domain.Page;
+public record PageResponse<T>(List<T> items, int page, int size, long totalItems, int totalPages) {
+    public static <S, T> PageResponse<T> from(Page<S> source, java.util.function.Function<S, T> mapper) {
+        return new PageResponse<>(source.getContent().stream().map(mapper).toList(), source.getNumber(),
+                source.getSize(), source.getTotalElements(), source.getTotalPages());
+    }
+}
