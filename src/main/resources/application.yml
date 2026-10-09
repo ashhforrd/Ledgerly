@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: ledgerly
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ledgerly}
+    username: ${DATABASE_USERNAME:ledgerly}
+    password: ${DATABASE_PASSWORD:ledgerly}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+ledgerly:
+  auth:
+    session-duration: ${AUTH_SESSION_DURATION:PT24H}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+server:
+  shutdown: graceful
