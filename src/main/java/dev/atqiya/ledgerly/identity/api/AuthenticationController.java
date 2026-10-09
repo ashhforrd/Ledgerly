@@ -1,12 +1,18 @@
 package dev.atqiya.ledgerly.identity.api;
 
 import dev.atqiya.ledgerly.identity.application.AuthResult;
+import dev.atqiya.ledgerly.identity.application.AuthenticatedUser;
 import dev.atqiya.ledgerly.identity.application.AuthenticationService;
+import dev.atqiya.ledgerly.identity.security.BearerTokenResolver;
 import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,11 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final BearerTokenResolver tokenResolver;
 
     public AuthenticationController(
-            AuthenticationService authenticationService
+            AuthenticationService authenticationService,
+            BearerTokenResolver tokenResolver
     ) {
         this.authenticationService = authenticationService;
+        this.tokenResolver = tokenResolver;
     }
 
     @PostMapping("/register")
@@ -47,5 +56,21 @@ public class AuthenticationController {
         );
 
         return ResponseEntity.ok(AuthResponse.from(result));
+    }
+
+    @GetMapping("/me")
+    public UserResponse me(
+            @AuthenticationPrincipal AuthenticatedUser user
+    ) {
+        return UserResponse.from(user);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
+    ) {
+        tokenResolver.resolve(authorizationHeader)
+                .ifPresent(authenticationService::logout);
+        return ResponseEntity.noContent().build();
     }
 }
