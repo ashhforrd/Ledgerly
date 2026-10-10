@@ -4,7 +4,7 @@ export function BrandMark({ className = "" }: { className?: string }) {
   return (
     <div
       className={cn(
-        "grid size-10 shrink-0 place-items-center rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/20",
+        "grid size-10 shrink-0 place-items-center rounded-xl bg-white text-neutral-950 shadow-lg shadow-black/30",
         className,
       )}
     >
@@ -15,13 +15,12 @@ export function BrandMark({ className = "" }: { className?: string }) {
         />
         <path
           d="M15 23c0-4 3-7 7-7h4c4 0 7 3 7 7 0 8-9 13-9 13s-9-5-9-13Z"
-          fill="#0b1220"
-          opacity=".9"
+          fill="#f5f5f5"
         />
         <circle cx="20" cy="23" r="3" fill="currentColor" />
         <circle cx="28" cy="23" r="3" fill="currentColor" />
-        <circle cx="20" cy="23" r="1.2" fill="#0b1220" />
-        <circle cx="28" cy="23" r="1.2" fill="#0b1220" />
+        <circle cx="20" cy="23" r="1.2" fill="#0a0a0a" />
+        <circle cx="28" cy="23" r="1.2" fill="#0a0a0a" />
         <path d="m24 25-2.5 3h5L24 25Z" fill="#34d399" />
       </svg>
     </div>

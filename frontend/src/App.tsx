@@ -36,7 +36,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/sonner";
 import { api, ApiError, money } from "@/lib/api";
@@ -188,7 +187,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="flex flex-col border-b bg-sidebar lg:sticky lg:top-0 lg:h-screen lg:border-r lg:border-b-0">
+      <aside className="flex flex-col bg-sidebar lg:sticky lg:top-0 lg:h-screen">
         <div className="flex h-20 items-center gap-3 px-5">
           <BrandMark />
           <div>
@@ -196,7 +195,6 @@ function App() {
             <p className="text-xs text-muted-foreground">Business finance</p>
           </div>
         </div>
-        <Separator />
         <div className="space-y-2 px-4 pt-4">
           <p className="px-1 text-[11px] font-semibold uppercase tracking-[.16em] text-muted-foreground">
             Workspace
@@ -229,7 +227,7 @@ function App() {
             </button>
           ))}
         </nav>
-        <div className="mt-auto border-t p-3 lg:p-4">
+        <div className="mt-auto p-3 lg:p-4">
           <Button
             type="button"
             variant="ghost"
@@ -285,14 +283,14 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
   };
   return (
     <main className="auth-grid relative grid min-h-screen overflow-hidden lg:grid-cols-[1.1fr_.9fr]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,.16),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(34,197,94,.07),transparent_30%)]" />
-      <section className="relative hidden flex-col justify-between border-r p-12 lg:flex">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.055),transparent_35%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,.025),transparent_30%)]" />
+      <section className="relative hidden flex-col justify-between p-12 lg:flex">
         <div className="flex items-center gap-3">
           <BrandMark />
           <span className="text-xl font-bold">Ledgerly</span>
         </div>
         <div className="max-w-xl">
-          <Badge className="mb-5 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/10">
+          <Badge className="mb-5 bg-white/[.05] text-emerald-300 hover:bg-white/[.05]">
             Financial operations, clearly organized
           </Badge>
           <h1 className="text-5xl font-bold leading-[1.08] tracking-[-.035em]">
@@ -310,7 +308,7 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
             ].map(([title, copy]) => (
               <div
                 key={title}
-                className="rounded-xl border bg-card/60 p-4 backdrop-blur"
+                className="rounded-xl bg-card/60 p-4 backdrop-blur"
               >
                 <p className="font-semibold">{title}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{copy}</p>
@@ -323,7 +321,7 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
         </p>
       </section>
       <section className="relative grid place-items-center p-6 md:p-12">
-        <Card className="w-full max-w-md border-white/10 bg-card/90 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <Card className="w-full max-w-md bg-card/90 shadow-2xl shadow-black/30 backdrop-blur-xl">
           <CardHeader className="space-y-3 pb-2">
             <div className="mb-2 flex items-center gap-3 lg:hidden">
               <BrandMark className="size-9" />
@@ -375,7 +373,7 @@ function AuthScreen({ onAuthenticated }: { onAuthenticated: () => void }) {
               )}
               <Button
                 type="submit"
-                className="h-10 w-full bg-emerald-500 hover:bg-emerald-400"
+                className="h-10 w-full bg-foreground text-background hover:bg-foreground/90"
                 disabled={loading}
               >
                 {loading && <Loader2 className="animate-spin" />}
@@ -455,7 +453,7 @@ function WorkspaceSetup({ onCreated }: { onCreated: () => Promise<void> }) {
             </div>
             <Button
               type="submit"
-              className="h-10 w-full bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 w-full bg-foreground text-background hover:bg-foreground/90"
               disabled={loading}
             >
               {loading && <Loader2 className="animate-spin" />}Create workspace
@@ -470,7 +468,7 @@ function WorkspaceSetup({ onCreated }: { onCreated: () => Promise<void> }) {
 function AppLoading() {
   return (
     <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-      <aside className="border-r bg-sidebar p-5">
+      <aside className="bg-sidebar p-5">
         <Skeleton className="h-10 w-36" />
         <div className="mt-14 space-y-3">
           {Array.from({ length: 7 }).map((_, index) => (
@@ -557,9 +555,9 @@ function Metric({
   tone: "blue" | "green" | "amber";
 }) {
   const tones = {
-    blue: "bg-emerald-500/10 text-emerald-300",
-    green: "bg-emerald-500/10 text-emerald-300",
-    amber: "bg-amber-500/10 text-amber-300",
+    blue: "bg-white/[.04] text-emerald-300",
+    green: "bg-white/[.04] text-emerald-300",
+    amber: "bg-white/[.04] text-amber-300",
   };
   return (
     <Card className="py-0">
@@ -583,11 +581,11 @@ function Metric({
 function StatusBadge({ status }: { status: string }) {
   const style =
     status === "PAID" || status === "POSTED" || status === "CONFIRMED"
-      ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+      ? "border-emerald-400/25 bg-transparent text-emerald-300"
       : status === "VOID" || status === "VOIDED"
         ? "border-red-400/20 bg-red-400/10 text-red-300"
         : status === "SENT"
-          ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+          ? "border-emerald-400/25 bg-transparent text-emerald-300"
           : "";
   return (
     <Badge variant="outline" className={style}>
@@ -815,7 +813,7 @@ function Transactions({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 bg-foreground text-background hover:bg-foreground/90"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1037,7 +1035,7 @@ function Customers({ workspace }: { workspace: Workspace }) {
             <Field name="billingAddress" label="Billing address" />
             <Button
               type="submit"
-              className="h-10 bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 bg-foreground text-background hover:bg-foreground/90"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1277,7 +1275,7 @@ function Invoices({ workspace }: { workspace: Workspace }) {
               <Field name="notes" label="Notes (optional)" />
               <Button
                 type="submit"
-                className="h-10 bg-emerald-500 hover:bg-emerald-400"
+                className="h-10 bg-foreground text-background hover:bg-foreground/90"
                 disabled={saving}
               >
                 {saving ? <Loader2 className="animate-spin" /> : <Plus />}Create
@@ -1496,7 +1494,7 @@ function PaymentDialog({
           <Button
             type="submit"
             form="record-payment"
-            className="bg-emerald-500 hover:bg-emerald-400"
+            className="bg-foreground text-background hover:bg-foreground/90"
             disabled={loading}
           >
             {loading && <Loader2 className="animate-spin" />}Record payment
@@ -1585,7 +1583,7 @@ function Categories({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 bg-foreground text-background hover:bg-foreground/90"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Add
@@ -1734,7 +1732,7 @@ function Imports({ workspace }: { workspace: Workspace }) {
             </div>
             <Button
               type="submit"
-              className="h-10 bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 bg-foreground text-background hover:bg-foreground/90"
               disabled={loading}
             >
               {loading ? <Loader2 className="animate-spin" /> : <FileUp />}
@@ -1955,7 +1953,7 @@ function Rules({ workspace }: { workspace: Workspace }) {
             />
             <Button
               type="submit"
-              className="h-10 bg-emerald-500 hover:bg-emerald-400"
+              className="h-10 bg-foreground text-background hover:bg-foreground/90"
               disabled={saving}
             >
               {saving ? <Loader2 className="animate-spin" /> : <Plus />}Create

@@ -66,23 +66,23 @@
 :root,
 .dark {
   color-scheme: dark;
-  --background: oklch(0.125 0.007 155);
-  --foreground: oklch(0.96 0.006 155);
-  --card: oklch(0.165 0.01 155);
-  --card-foreground: oklch(0.96 0.006 155);
-  --popover: oklch(0.185 0.012 155);
-  --popover-foreground: oklch(0.96 0.006 155);
+  --background: oklch(0.09 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.135 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.16 0 0);
+  --popover-foreground: oklch(0.96 0 0);
   --primary: oklch(0.69 0.17 155);
-  --primary-foreground: oklch(0.13 0.025 155);
-  --secondary: oklch(0.21 0.012 155);
-  --secondary-foreground: oklch(0.94 0.006 155);
-  --muted: oklch(0.205 0.01 155);
-  --muted-foreground: oklch(0.68 0.014 155);
-  --accent: oklch(0.245 0.035 155);
-  --accent-foreground: oklch(0.96 0.006 155);
+  --primary-foreground: oklch(0.09 0 0);
+  --secondary: oklch(0.19 0 0);
+  --secondary-foreground: oklch(0.94 0 0);
+  --muted: oklch(0.19 0 0);
+  --muted-foreground: oklch(0.68 0 0);
+  --accent: oklch(0.22 0 0);
+  --accent-foreground: oklch(0.96 0 0);
   --destructive: oklch(0.68 0.19 24);
-  --border: oklch(0.275 0.014 155);
-  --input: oklch(0.265 0.015 155);
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.24 0 0);
   --ring: oklch(0.69 0.17 155);
   --chart-1: oklch(0.69 0.17 155);
   --chart-2: oklch(0.73 0.14 135);
@@ -90,13 +90,13 @@
   --chart-4: oklch(0.68 0.17 304);
   --chart-5: oklch(0.67 0.18 25);
   --radius: 0.75rem;
-  --sidebar: oklch(0.14 0.009 155);
-  --sidebar-foreground: oklch(0.94 0.006 155);
+  --sidebar: oklch(0.09 0 0);
+  --sidebar-foreground: oklch(0.94 0 0);
   --sidebar-primary: oklch(0.69 0.17 155);
-  --sidebar-primary-foreground: oklch(0.13 0.025 155);
-  --sidebar-accent: oklch(0.215 0.024 155);
-  --sidebar-accent-foreground: oklch(0.96 0.006 155);
-  --sidebar-border: oklch(0.245 0.013 155);
+  --sidebar-primary-foreground: oklch(0.09 0 0);
+  --sidebar-accent: oklch(0.17 0 0);
+  --sidebar-accent-foreground: oklch(0.96 0 0);
+  --sidebar-border: oklch(0.22 0 0);
   --sidebar-ring: oklch(0.69 0.17 155);
 }
 
@@ -125,7 +125,7 @@
     @apply flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium capitalize text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground;
   }
   .nav-item.active {
-    @apply bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-400/15;
+    @apply bg-white/[.045] text-emerald-300;
   }
   .form-grid {
     @apply grid items-end gap-4 md:grid-cols-2 xl:grid-cols-3;
@@ -147,8 +147,8 @@
   }
   .auth-grid {
     background-image:
-      linear-gradient(oklch(0.69 0.17 155 / 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.69 0.17 155 / 0.04) 1px, transparent 1px);
+      linear-gradient(oklch(1 0 0 / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 0.025) 1px, transparent 1px);
     background-size: 42px 42px;
   }
   .rdp-ledgerly {
@@ -175,12 +175,12 @@
     @apply grid size-9 place-items-center rounded-md text-sm hover:bg-muted;
   }
   .rdp-ledgerly .rdp-selected .rdp-day_button {
-    @apply bg-emerald-500 font-semibold text-emerald-950 hover:bg-emerald-500;
+    @apply bg-foreground font-semibold text-background hover:bg-foreground;
   }
   .rdp-ledgerly .rdp-outside {
     @apply text-muted-foreground/40;
   }
   .rdp-ledgerly .rdp-today:not(.rdp-selected) .rdp-day_button {
-    @apply bg-emerald-500/10 text-emerald-300;
+    @apply bg-white/[.045] text-emerald-300;
   }
 }
