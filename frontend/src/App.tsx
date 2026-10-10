@@ -187,7 +187,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="flex flex-col bg-sidebar lg:sticky lg:top-0 lg:h-screen">
+      <aside className="flex flex-col border-0 bg-sidebar shadow-none ring-0 outline-none lg:sticky lg:top-0 lg:h-screen">
         <div className="flex h-20 items-center gap-3 px-5">
           <BrandMark />
           <div>
@@ -468,7 +468,7 @@ function WorkspaceSetup({ onCreated }: { onCreated: () => Promise<void> }) {
 function AppLoading() {
   return (
     <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-      <aside className="bg-sidebar p-5">
+      <aside className="border-0 bg-sidebar p-5 shadow-none ring-0 outline-none">
         <Skeleton className="h-10 w-36" />
         <div className="mt-14 space-y-3">
           {Array.from({ length: 7 }).map((_, index) => (
