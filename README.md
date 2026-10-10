@@ -8,6 +8,48 @@ Ledgerly is intentionally not a bank or a full accounting suite. Financial
 correctness, traceability, and useful information take priority over decorative
 features.
 
+## Interface preview
+
+![Ledgerly financial overview](<screenshots/Screenshot 2026-10-10 at 12.25.53.png>)
+
+<details>
+<summary>View the complete product interface</summary>
+<br />
+
+<table>
+  <tr>
+    <td width="50%">
+      <strong>Transactions</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.25.59.png" alt="Ledgerly transaction ledger" />
+    </td>
+    <td width="50%">
+      <strong>Invoices</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.26.08.png" alt="Ledgerly invoice management" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>Customers</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.26.14.png" alt="Ledgerly customer management" />
+    </td>
+    <td width="50%">
+      <strong>Categories</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.26.18.png" alt="Ledgerly financial categories" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <strong>Statement import</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.26.29.png" alt="Ledgerly CSV statement import" />
+    </td>
+    <td width="50%">
+      <strong>Categorization rules</strong><br /><br />
+      <img src="screenshots/Screenshot%202026-10-10%20at%2012.26.34.png" alt="Ledgerly categorization rules" />
+    </td>
+  </tr>
+</table>
+</details>
+
 ## Product capabilities
 
 - Isolated business workspaces with token-based authentication.
