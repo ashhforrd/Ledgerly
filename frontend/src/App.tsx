@@ -619,17 +619,6 @@ function Overview({ workspace }: { workspace: Workspace }) {
       <Heading
         title="Financial overview"
         description={`${monthStart} through ${today} · posted transactions only`}
-        action={
-          <Button
-            type="button"
-            variant="outline"
-            onClick={load}
-            disabled={loading}
-          >
-            <RefreshCw className={loading ? "animate-spin" : ""} />
-            Refresh
-          </Button>
-        }
       />
       {loading ? (
         <div className="grid gap-4 md:grid-cols-3">
