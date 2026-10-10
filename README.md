@@ -8,6 +8,20 @@ Ledgerly is intentionally not a bank or a full accounting suite. Financial
 correctness, traceability, and useful information take priority over decorative
 features.
 
+## Product capabilities
+
+- Isolated business workspaces with token-based authentication.
+- Income and expense ledger with categories, filtering, and voiding.
+- CSV statement preview, validation, duplicate detection, and confirmation.
+- Customers and draft, sent, paid, overdue, and void invoice states.
+- Rule-based categorization and backend-calculated financial reports.
+- A dark, responsive operations interface built with shadcn/ui.
+
+For portfolio demonstrations, the local Docker profile creates a synthetic
+`Northstar Studio` workspace after any user registers. The seed is idempotent
+and populates every product area; it never runs unless
+`LEDGERLY_DEMO_SEED_ENABLED=true`.
+
 ## Architecture
 
 Ledgerly starts as a modular monolith with explicit domain boundaries.
@@ -61,6 +75,11 @@ docker compose up --build
 Open the web application at `http://localhost:3000`. The API is also available
 directly at `http://localhost:8080`, while requests from the web application to
 `/api` and `/actuator` are proxied through Nginx.
+
+Register any account to receive the local demo workspace. A fixed credential is
+deliberately not stored in the repository. See the [demo guide](docs/DEMO.md)
+and use [`docs/sample-statement.csv`](docs/sample-statement.csv) for the import
+walkthrough.
 
 To stop the application:
 
@@ -132,14 +151,16 @@ Run backend tests and the frontend production build:
 
 ```bash
 ./gradlew test
-cd frontend && npm run build
+npm --prefix frontend run lint
+npm --prefix frontend run build
 ```
 
 Run the complete production-shaped local stack:
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 curl http://localhost:8080/actuator/health
+node scripts/smoke-test.mjs
 ```
 
 Responses include an `X-Request-ID` header for log correlation. Health,
@@ -148,7 +169,7 @@ Boot Actuator.
 
 ## Interface principles
 
-- Never display fabricated financial data.
+- Synthetic data is restricted to the explicitly enabled local demo workspace.
 - Every metric states its period, unit, and data source.
 - Empty states explain what is missing instead of implying a zero balance.
 - Color always has a semantic meaning and is never the only status indicator.

@@ -10,7 +10,7 @@ All business endpoints require `Authorization: Bearer <token>`. Resources are sc
 | Workspaces | `POST/GET /api/v1/workspaces` |
 | Categories | `POST/GET /workspaces/{id}/categories`, rename and archive endpoints |
 | Transactions | `POST/GET /workspaces/{id}/transactions`, update and void endpoints |
-| Imports | `POST /workspaces/{id}/imports/preview`, `POST /imports/{importId}/confirm` |
+| Imports | `GET /workspaces/{id}/imports`, `POST /workspaces/{id}/imports/preview`, `POST /imports/{importId}/confirm` |
 | Customers | `POST/GET /workspaces/{id}/customers`, archive endpoint |
 | Invoices | `POST/GET /workspaces/{id}/invoices`, send, payment, and void endpoints |
 | Reports | `GET /workspaces/{id}/reports/financial-summary?from=YYYY-MM-DD&to=YYYY-MM-DD` |
