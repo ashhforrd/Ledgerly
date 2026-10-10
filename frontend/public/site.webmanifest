@@ -1,0 +1,17 @@
+{
+  "name": "Ledgerly — Business Finance Operations",
+  "short_name": "Ledgerly",
+  "description": "Operations-focused business finance for cash flow, invoices, statement imports, customers, and categorization.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

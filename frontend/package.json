@@ -1,5 +1,6 @@
 {
   "name": "ledgerly-web",
+  "description": "Operations-focused business finance interface for Ledgerly.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
